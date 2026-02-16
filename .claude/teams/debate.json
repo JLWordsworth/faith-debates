@@ -1,0 +1,40 @@
+{
+  "description": "Full theological debate team - research, debate, evaluate, and summarize",
+  "members": [
+    {
+      "name": "researcher-a",
+      "agentType": "general-purpose",
+      "description": "Researches the first position (Position A) for any theological topic"
+    },
+    {
+      "name": "researcher-b",
+      "agentType": "general-purpose",
+      "description": "Researches the second position (Position B) for any theological topic"
+    },
+    {
+      "name": "moderator",
+      "agentType": "general-purpose",
+      "description": "Impartial debate moderator ensuring fair and structured discourse"
+    },
+    {
+      "name": "debater-a",
+      "agentType": "general-purpose",
+      "description": "Debater representing Position A (persona loaded from position-a.md)"
+    },
+    {
+      "name": "debater-b",
+      "agentType": "general-purpose",
+      "description": "Debater representing Position B (persona loaded from position-b.md)"
+    },
+    {
+      "name": "judge",
+      "agentType": "general-purpose",
+      "description": "Impartial arbiter evaluating debate performance and rendering verdict"
+    },
+    {
+      "name": "summarizer",
+      "agentType": "general-purpose",
+      "description": "Creates accessible summaries for non-theological audiences"
+    }
+  ]
+}

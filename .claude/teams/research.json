@@ -1,0 +1,15 @@
+{
+  "description": "Research-only team for parallel position discovery",
+  "members": [
+    {
+      "name": "researcher-a",
+      "agentType": "general-purpose",
+      "description": "Researches the first position (Position A) for any theological topic"
+    },
+    {
+      "name": "researcher-b",
+      "agentType": "general-purpose",
+      "description": "Researches the second position (Position B) for any theological topic"
+    }
+  ]
+}
