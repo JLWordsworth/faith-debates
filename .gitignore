@@ -1,0 +1,10 @@
+# Claude Code
+.claude.json
+.claude.json.backup.*
+
+# Debate transcripts (optional - comment out if you want to track them)
+# debates/*/
+
+# OS
+.DS_Store
+Thumbs.db
