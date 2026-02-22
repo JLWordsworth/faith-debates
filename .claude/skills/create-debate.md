@@ -4,7 +4,7 @@ description: Create a fully automated theological/spiritual debate from a single
 ---
 
 Usage: "Create a debate on [topic]" or "debate [topic]"
-Options: Add "in series" or "sequentially" to run agents one at a time (recommended for system stability)
+Options: Add "in series", "sequentially", or "with minimal resources" to run agents one at a time (recommended for system stability)
 
 ## What This Does
 
@@ -19,6 +19,13 @@ Given a debate topic, this skill:
 
 **Series (recommended):** Run "Create a debate on [topic] in series" or "Create a debate on [topic] sequentially" to execute agents one at a time. More stable, prevents crashes, each agent shuts down before the next starts.
 
+**Resource-Constrained (minimal CPU/memory):** Run "Create a debate on [topic] with minimal resources" to use an even more efficient sequential workflow. This method:
+- Spawns agents as independent subagents (not teammates)
+- No team creation overhead
+- Explicit verification of shutdown between each agent
+- Direct file operations without task list coordination
+- Best for systems that have crashed under previous debate workflows
+
 ## Requirements
 
 - CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS must be enabled
@@ -28,9 +35,14 @@ Given a debate topic, this skill:
 
 ### 0. Determine Execution Mode
 
-Check if user specified "in series", "sequentially", or "one at a time". If yes, use series execution. Otherwise, default to parallel.
+Check if user specified:
+- "in series", "sequentially", or "one at a time" → Use series execution
+- "with minimal resources" or "resource-constrained" → Use minimal resource execution
+- Otherwise → Default to parallel
 
 **Series mode benefits:** Each agent completes and shuts down before next starts, preventing resource overload and system crashes.
+
+**Minimal resource mode benefits:** Independent subagents (no team overhead), file verification between steps, lowest memory footprint. Best for systems that have crashed previously.
 
 ### 1. Create Debate Folder
 
@@ -80,6 +92,16 @@ Spawn teammates for each role using the Task tool with the appropriate agent def
 
 **Key for series mode:** Always use SendMessage with type "shutdown_request" after each agent completes their work. Wait for approval confirmation before spawning the next agent.
 
+**Resource-constrained mode (minimal):**
+1. Do NOT create a team - spawn agents as independent subagents using Task tool
+2. Each agent is a discrete invocation with subagent_type="general-purpose" and name="[role-name]"
+3. Sequence: Researcher A → verify file → Researcher B → verify file → Moderator → verify → Debater A (opening) → verify → Debater B (opening) → verify → continue through all debate phases
+4. After each agent completes, they auto-shutdown (no SendMessage needed for independent subagents)
+5. Verify each file exists before proceeding to next agent
+6. Final commit after all files complete
+
+**Key difference:** Resource-constrained mode uses independent Task invocations instead of TeamCreate/teammates, eliminating team coordination overhead.
+
 ### 6. Report Results
 
 When complete, report to user with:
@@ -117,3 +139,14 @@ Claude:
 6. Judge → completes → shuts down
 7. Summarizer → completes → shuts down
 8. Reports results
+
+**Resource-constrained (minimal CPU/memory):**
+User: "Create a debate on whether Christians can lose their salvation with minimal resources"
+Claude:
+1. Creates debates/can-lose-salvation/
+2. Spawns independent subagents (no team creation)
+3. Researcher A (Task tool) → verify file → Researcher B → verify file → continue through all phases
+4. Each agent auto-shutdowns after completing work
+5. Judge and Summarizer follow same pattern
+6. Final git commit
+7. Reports results
